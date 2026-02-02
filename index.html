@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Be My Valentine?</title>
+    <style>
+      :root {
+        --ink: #1f1a1a;
+        --rose: #f4b9c6;
+        --scarlet: #c91f3b;
+        --cream: #fff4f7;
+        --peach: #ffd7c8;
+        --night: #2a1c22;
+        --space: clamp(24px, 3.2vw, 32px);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Gloock", "Georgia", serif;
+        color: var(--ink);
+        background:
+          radial-gradient(900px 900px at 10% 10%, #fff, rgba(255, 255, 255, 0) 60%),
+          radial-gradient(1200px 1200px at 90% 20%, #ffdfe9, rgba(255, 255, 255, 0) 55%),
+          radial-gradient(1000px 1000px at 20% 80%, #ffe9d6, rgba(255, 255, 255, 0) 50%),
+          linear-gradient(120deg, var(--cream), #fff 40%, var(--peach));
+        display: grid;
+        place-items: center;
+        padding: 32px 16px 48px;
+      }
+
+      .intro {
+        width: min(460px, 100%);
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(201, 31, 59, 0.2);
+        border-radius: 28px;
+        padding: clamp(22px, 4vw, 36px);
+        text-align: center;
+        box-shadow: 0 24px 60px rgba(42, 28, 34, 0.16);
+        display: grid;
+        gap: var(--space);
+        grid-area: 1 / 1;
+        justify-self: center;
+        align-self: center;
+        transition: opacity 420ms ease, transform 420ms ease;
+        z-index: 2;
+      }
+
+      .intro h2 {
+        margin: 0;
+        font-size: clamp(2rem, 5vw, 3rem);
+        color: var(--night);
+      }
+
+      .intro-heart {
+        width: 200px;
+        height: 200px;
+        margin: 0 auto;
+        display: block;
+        object-fit: contain;
+        animation: introPulse 2.8s ease-in-out infinite;
+        filter: drop-shadow(0 8px 16px rgba(201, 31, 59, 0.25));
+      }
+
+      @keyframes introPulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.08);
+        }
+      }
+
+      .intro p {
+        margin: 0;
+        font-family: "Space Grotesk", "Arial", sans-serif;
+        color: rgba(42, 28, 34, 0.7);
+      }
+
+      .intro.is-exiting {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.98);
+      }
+
+      .card {
+        width: min(900px, 100%);
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(201, 31, 59, 0.15);
+        border-radius: 32px;
+        box-shadow: 0 30px 80px rgba(42, 28, 34, 0.15);
+        padding: clamp(24px, 5vw, 48px);
+        display: grid;
+        gap: var(--space);
+        position: relative;
+        overflow: hidden;
+        grid-area: 1 / 1;
+        justify-self: center;
+        align-self: center;
+        opacity: 0;
+        transform: translateY(12px) scale(1.02);
+        transition: opacity 520ms ease, transform 520ms ease;
+      }
+
+      .card.is-hidden {
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .card.is-revealing {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      .burst {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 3;
+      }
+
+      .burst-heart {
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        background: #d41f49;
+        transform: rotate(-45deg);
+        border-radius: 4px;
+        opacity: 0;
+        animation: burst 900ms ease-out forwards;
+      }
+
+      .burst-heart::before,
+      .burst-heart::after {
+        content: "";
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: inherit;
+      }
+
+      .burst-heart::before {
+        top: -9px;
+        left: 0;
+      }
+
+      .burst-heart::after {
+        left: 9px;
+        top: 0;
+      }
+
+      @keyframes burst {
+        0% {
+          transform: translate(0, 0) scale(0.7) rotate(-45deg);
+          opacity: 0;
+        }
+        15% {
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--x), var(--y)) scale(1.2) rotate(-45deg);
+          opacity: 0;
+        }
+      }
+
+      .card::before,
+      .card::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        filter: blur(0.5px);
+        opacity: 0.3;
+        background: radial-gradient(circle at 30% 30%, #fff, rgba(201, 31, 59, 0.4));
+        animation: float 14s ease-in-out infinite;
+      }
+
+      .card::before {
+        top: -80px;
+        right: -60px;
+      }
+
+      .card::after {
+        bottom: -100px;
+        left: -40px;
+        animation-delay: 2s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-14px);
+        }
+      }
+
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .tag {
+        font-family: "Space Grotesk", "Arial", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        font-size: 12px;
+        color: var(--scarlet);
+        background: rgba(201, 31, 59, 0.08);
+        padding: 8px 16px;
+        border-radius: 999px;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 4.5vw, 3.4rem);
+        margin: 0;
+        color: var(--night);
+        text-align: center;
+      }
+
+      #question .line {
+        display: block;
+      }
+
+      .message {
+        font-family: "Space Grotesk", "Arial", sans-serif;
+        font-size: clamp(1rem, 2.2vw, 1.2rem);
+        line-height: 1.7;
+        max-width: 520px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: var(--space);
+        align-items: center;
+      }
+
+      .stack {
+        display: grid;
+        gap: var(--space);
+      }
+
+      .heart-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .heart {
+        aspect-ratio: 1 / 1;
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+        animation: pulse 4s ease-in-out infinite;
+        background-size: cover;
+        background-position: center;
+      }
+
+      .heart:nth-child(1) {
+        background-image: url("images/pic%201.jpeg");
+      }
+
+      .heart:nth-child(2) {
+        animation-delay: 0.8s;
+        background-image: url("images/pic%202.JPG");
+      }
+
+      .heart:nth-child(3) {
+        animation-delay: 1.6s;
+        background-image: url("images/pic%203.jpeg");
+      }
+
+      .heart:nth-child(4) {
+        animation-delay: 2.4s;
+        background-image: url("images/pic%204.jpeg");
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.04);
+        }
+      }
+
+      .cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space);
+        align-items: center;
+        margin: 0;
+        justify-content: center;
+      }
+
+      button {
+        border: none;
+        border-radius: 999px;
+        padding: 14px 28px;
+        font-size: 1rem;
+        font-family: "Space Grotesk", "Arial", sans-serif;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .yes {
+        background: var(--scarlet);
+        color: #fff;
+        box-shadow: 0 12px 28px rgba(201, 31, 59, 0.35);
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(201, 31, 59, 0.25);
+      }
+
+      .maybe {
+        background: #fff;
+        color: var(--scarlet);
+        border: 1px solid rgba(201, 31, 59, 0.4);
+      }
+
+      .note {
+        font-family: "Space Grotesk", "Arial", sans-serif;
+        font-size: 0.95rem;
+        color: rgba(42, 28, 34, 0.7);
+        margin: 0;
+      }
+
+      .final-text {
+        text-align: center;
+        font-size: clamp(1.6rem, 4vw, 2.4rem);
+        color: var(--night);
+        padding: clamp(24px, 5vw, 48px);
+      }
+
+      .rsvp {
+        display: grid;
+        gap: 12px;
+        padding: 22px 24px;
+        border-radius: 20px;
+        background: rgba(255, 183, 198, 0.25);
+        border: 1px solid rgba(201, 31, 59, 0.15);
+      }
+
+      .rsvp span {
+        font-family: "Space Grotesk", "Arial", sans-serif;
+        font-size: 0.95rem;
+      }
+
+      .rsvp strong {
+        font-size: 1.1rem;
+      }
+
+      .signature {
+        font-family: "Space Grotesk", "Arial", sans-serif;
+        font-size: 0.95rem;
+      }
+
+      footer {
+        display: flex;
+        justify-content: space-between;
+        font-family: "Space Grotesk", "Arial", sans-serif;
+        font-size: 0.85rem;
+        color: rgba(42, 28, 34, 0.6);
+        margin: 0;
+      }
+
+      @media (max-width: 600px) {
+        header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        footer {
+          flex-direction: column;
+          gap: 8px;
+        }
+      }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gloock&family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <section class="intro" id="intro">
+      <h2>Happy Valentine’s Day</h2>
+      <img class="intro-heart" src="images/into%20heart.png" alt="Heart" />
+      <p id="introMessage">Someone has a little surprise waiting for you.</p>
+      <button class="yes" id="openCard" type="button">Open</button>
+    </section>
+
+    <main class="card is-hidden" id="card">
+      <header>
+        <span class="tag">Handmade for you</span>
+        <span class="signature">From: Your Bhavista</span>
+      </header>
+
+      <section class="hero">
+        <div class="stack">
+          <h1 id="question">Will you be my Valentine?</h1>
+          <div class="cta">
+            <button class="yes" id="yesButton" type="button">Yes</button>
+            <button class="maybe" id="noButton" type="button">No</button>
+          </div>
+          <p class="note" id="response"></p>
+        </div>
+        <div class="heart-grid" aria-hidden="true">
+          <div class="heart"></div>
+          <div class="heart"></div>
+          <div class="heart"></div>
+          <div class="heart"></div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const openButton = document.getElementById("openCard");
+      const intro = document.getElementById("intro");
+      const introMessage = document.getElementById("introMessage");
+      const card = document.getElementById("card");
+      const yesButton = document.getElementById("yesButton");
+      const noButton = document.getElementById("noButton");
+      const question = document.getElementById("question");
+      const response = document.getElementById("response");
+      const noMessages = [
+        "Appreciate that but come on, no messing around now... answer it properly.",
+        "Vedika lets not. Lets just NOT. You have had your fun.",
+        "One more chance now, don't play with me, I beg you hit me with a yes.",
+      ];
+      const psMessage =
+        "P.S. I know I can't be with you on Valentine's, but you will forever be in my heart, always.";
+      let noClicks = 0;
+      let typingTimer = null;
+
+      const typeText = (el, text, speed = 45) => {
+        if (!el) {
+          return;
+        }
+        if (typingTimer) {
+          clearInterval(typingTimer);
+        }
+        el.textContent = "";
+        let index = 0;
+        typingTimer = setInterval(() => {
+          el.textContent += text[index];
+          index += 1;
+          if (index >= text.length) {
+            clearInterval(typingTimer);
+            typingTimer = null;
+          }
+        }, speed);
+      };
+
+      if (introMessage) {
+        const introText = introMessage.textContent || "";
+        typeText(introMessage, introText, 35);
+      }
+
+      const launchBurst = () => {
+        const burst = document.createElement("div");
+        burst.className = "burst";
+        document.body.appendChild(burst);
+
+        const count = 26;
+        for (let i = 0; i < count; i += 1) {
+          const heart = document.createElement("div");
+          heart.className = "burst-heart";
+          const angle = Math.random() * Math.PI * 2;
+          const distance = 120 + Math.random() * 180;
+          const x = Math.cos(angle) * distance;
+          const y = Math.sin(angle) * distance;
+          heart.style.left = "50%";
+          heart.style.top = "50%";
+          heart.style.setProperty("--x", `${x}px`);
+          heart.style.setProperty("--y", `${y}px`);
+          heart.style.animationDelay = `${Math.random() * 120}ms`;
+          heart.style.background =
+            i % 3 === 0 ? "#ff9db1" : i % 3 === 1 ? "#d41f49" : "#f47e9c";
+          burst.appendChild(heart);
+        }
+
+        setTimeout(() => {
+          burst.remove();
+        }, 700);
+      };
+
+      if (openButton && intro && card) {
+        openButton.addEventListener("click", () => {
+          launchBurst();
+
+          intro.classList.add("is-exiting");
+          card.classList.remove("is-hidden");
+          requestAnimationFrame(() => {
+            card.classList.add("is-revealing");
+          });
+
+          setTimeout(() => {
+            intro.style.display = "none";
+            if (response) {
+              typeText(response, psMessage);
+            }
+          }, 700);
+        });
+      }
+
+      if (yesButton && question && response) {
+        yesButton.addEventListener("click", () => {
+          launchBurst();
+          question.innerHTML =
+            '<span class="line">I Love You</span><span class="line">My Crazy Little Psycho</span>';
+          typeText(response, "I am honoured to be your Valentine");
+          if (noButton) {
+            noButton.remove();
+          }
+          yesButton.remove();
+          response.style.fontSize = "clamp(1.4rem, 3.2vw, 2rem)";
+          response.style.color = "var(--night)";
+          response.style.textAlign = "center";
+        });
+      }
+
+      if (noButton && question && card) {
+        noButton.addEventListener("click", () => {
+          launchBurst();
+          noClicks += 1;
+          if (typingTimer) {
+            clearInterval(typingTimer);
+            typingTimer = null;
+          }
+          if (noClicks <= noMessages.length) {
+            question.textContent = noMessages[noClicks - 1];
+            if (response) {
+              response.textContent = "";
+            }
+            return;
+          }
+
+          card.innerHTML =
+            '<div class="final-text">Love for that, but either way just know that I Love You.</div>';
+        });
+      }
+    </script>
+  </body>
+</html>
